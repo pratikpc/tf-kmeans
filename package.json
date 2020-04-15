@@ -31,5 +31,10 @@
   },
   "peerDependencies": {
     "@tensorflow/tfjs": "latest"
+  },
+  "publishConfig": {
+    "registry":"https://npm.pkg.github.com/",
+    "access": "public",
+    "always-auth": true
   }
 }
