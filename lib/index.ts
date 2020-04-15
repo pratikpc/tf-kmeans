@@ -29,7 +29,7 @@ export default class KMeans {
             selectedIndices.length = rows;
             selectedIndices = selectedIndices.fill(cluster);
             const selectedIndicesT = tf.tensor(selectedIndices);
-            
+
             let where = tf.equal(assignments, selectedIndicesT).asType("int32");
             where = where.reshape([where.shape[0], 1]);
             const count = where.sum();
@@ -87,15 +87,15 @@ export default class KMeans {
             .dataSync()[0]
         );
     }
-    public Train(values: tf.Tensor) {
+    public Train(values: tf.Tensor, callback = (_: any, __: any) => { }) {
         this.centroids = this.RandomSample(values);
-        let assignments = tf.tensor([]);
+        let predictions = tf.tensor([]);
 
         let iter = 0;
         while (true) {
-            assignments.dispose();
-            assignments = this.AssignClusters(values, this.centroids);
-            const newCentroids = this.NewCentroids(values, assignments);
+            predictions.dispose();
+            predictions = this.Predict(values);
+            const newCentroids = this.NewCentroids(values, predictions);
             const same = this.CheckCentroidSimmilarity(newCentroids, this.centroids, values);
             if (same || iter >= this.maxIter) {
                 newCentroids.dispose();
@@ -104,9 +104,10 @@ export default class KMeans {
             this.centroids.dispose();
             this.centroids = newCentroids;
             ++iter;
+            callback(this.centroids, predictions);
         }
 
-        return assignments;
+        return predictions;
     }
     public Predict(y: tf.Tensor) {
         return tf.tidy(() => {
