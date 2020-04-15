@@ -19,22 +19,17 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pratikpc/TF-KMeans.git"
+    "url": "git+https://github.com/pratikpc/tf-kmeans.git"
   },
   "bugs": {
-    "url": "https://github.com/pratikpc/TF-KMeans/issues"
+    "url": "https://github.com/pratikpc/tf-kmeans/issues"
   },
-  "homepage": "https://github.com/pratikpc/TF-KMeans#readme",
+  "homepage": "https://github.com/pratikpc/tf-kmeans#readme",
   "devDependencies": {
     "typescript": "3.5.3",
     "@tensorflow/tfjs": "latest"
   },
   "peerDependencies": {
     "@tensorflow/tfjs": "latest"
-  },
-  "publishConfig": {
-    "registry":"https://npm.pkg.github.com/",
-    "access": "public",
-    "always-auth": true
   }
 }
