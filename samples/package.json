@@ -1,0 +1,15 @@
+{
+  "name": "tf-kmeans-sample",
+  "version": "1.0.0",
+  "description": "A Sample Code to Run TF-KMeans",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Pratik Chowdhury (https://github.com/pratikpc/)",
+  "license": "MIT",
+  "dependencies": {
+    "@tensorflow/tfjs": "latest",
+    "tf-kmeans": ".."
+  }
+}
