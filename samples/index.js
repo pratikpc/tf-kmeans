@@ -1,4 +1,3 @@
-// process.env.DEBUG = 'node-vault'; // switch on debug mode
 const KMeans = require("tf-kmeans");
 const tf = require("@tensorflow/tfjs");
 tf.tidy(() => {
