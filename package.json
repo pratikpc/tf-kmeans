@@ -1,14 +1,16 @@
 {
   "name": "tf-kmeans",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A Library for Calculating K-Means using Tensorflow",
   "keywords": [
     "kmeans",
+    "kmeans-clustering",
     "tensorflow",
     "ML",
     "Machine-Learning",
     "MachineLearning",
-    "tf"
+    "tf",
+    "tfjs"
   ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
