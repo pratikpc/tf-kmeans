@@ -12,8 +12,8 @@ tf.tidy(() => {
 	console.log("Centroids Used are ");
 	kmeans.Centroids().print();
 	console.log("Prediction for Given Value is");
-    kmeans.Predict(tf.tensor([2, 3, 2])).print();
-    console.log("Amount of Memory Used is ", tf.memory());
+	kmeans.Predict(tf.tensor([2, 3, 2])).print();
+	console.log("Amount of Memory Used is ", tf.memory());
 	// Use this In case kmeans not executed in Tidy Function
 	kmeans.Dispose();
 })
