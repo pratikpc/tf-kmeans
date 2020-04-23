@@ -22,7 +22,7 @@ export default class KMeans {
             indices[i] = i;
         return indices;
     }
-    private NewCentroid(values: tf.Tensor, assignments: tf.Tensor, cluster: number, rows: number) {
+    private NewCentroidSingle(values: tf.Tensor, assignments: tf.Tensor, cluster: number, rows: number) {
         return tf.tidy(() => {
             // Make All Values Of Array to be of Same Size as Our Cluster
             let selectedIndices: number[] = [];
@@ -43,7 +43,7 @@ export default class KMeans {
             const rows = values.shape[0];
             const centroids: tf.Tensor[] = [];
             for (let cluster = 0; cluster < this.k; ++cluster) {
-                centroids.push(this.NewCentroid(values, assignments, cluster, rows));
+                centroids.push(this.NewCentroidSingle(values, assignments, cluster, rows));
             }
             return tf.stack(centroids);
         });
@@ -87,27 +87,44 @@ export default class KMeans {
             .dataSync()[0]
         );
     }
-    public Train(values: tf.Tensor, callback = (_: any, __: any) => { }) {
+    private TrainSingleStep(values: tf.Tensor) {
+        return tf.tidy(() => {
+            const predictions = this.Predict(values);
+            const newCentroids = this.NewCentroids(values, predictions);
+            return [newCentroids, predictions];
+        });
+    }
+    public Train(values: tf.Tensor, callback = (_centroid: tf.Tensor, _predictions: tf.Tensor) => { }) {
         this.centroids = this.RandomSample(values);
-        let predictions = tf.tensor([]);
-
         let iter = 0;
         while (true) {
-            predictions.dispose();
-            predictions = this.Predict(values);
-            const newCentroids = this.NewCentroids(values, predictions);
+            let [newCentroids, predictions] = this.TrainSingleStep(values);
             const same = this.CheckCentroidSimmilarity(newCentroids, this.centroids, values);
             if (same || iter >= this.maxIter) {
                 newCentroids.dispose();
-                break;
+                return predictions;
             }
             this.centroids.dispose();
             this.centroids = newCentroids;
             ++iter;
             callback(this.centroids, predictions);
         }
-
-        return predictions;
+    }
+    public async TrainAsync(values: tf.Tensor, callback = async (_iter: number, _centroid: tf.Tensor, _predictions: tf.Tensor) => { }) {
+        this.centroids = this.RandomSample(values);
+        let iter = 0;
+        while (true) {
+            let [newCentroids, predictions] = this.TrainSingleStep(values);
+            const same = this.CheckCentroidSimmilarity(newCentroids, this.centroids, values);
+            if (same || iter >= this.maxIter) {
+                newCentroids.dispose();
+                return predictions;
+            }
+            this.centroids.dispose();
+            this.centroids = newCentroids;
+            await callback(iter, this.centroids, predictions);
+            ++iter;
+        }
     }
     public Predict(y: tf.Tensor) {
         return tf.tidy(() => {
